@@ -12,7 +12,6 @@
 #include "Pickup.h"
 #include "ui/UILayout.h"
 
-#define KEYBOARD_ONLY 1
 const cocos2d::Vec2 GRAVITY(0.0f, GRAVITY_Y);
 
 bool Character::init() {
@@ -20,35 +19,44 @@ bool Character::init() {
     return false;
 
 #if KEYBOARD_ONLY
+  extern std::map<void *, ControllerState> controllerStates;
+  controllerStates.insert({0, ControllerState()});
   auto listener = cocos2d::EventListenerKeyboard::create();
   listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                   cocos2d::Event *event) {
-    cocos2d::Scheduler *scheduler =
-        cocos2d::Director::getInstance()->getScheduler();
+    ControllerState &keyboard_state = Util::getControllerState(0);
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A) {
       _velocity.x = 0.0f;
-      _previousControllerState.left = true;
-      _previousControllerState.right = false;
+      keyboard_state.left = true;
+      keyboard_state.right = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
       _velocity.x = 0.0f;
-      _previousControllerState.right = true;
-      _previousControllerState.left = false;
+      keyboard_state.right = true;
+      keyboard_state.left = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
-      _previousControllerState.a = true;
+      keyboard_state.a = true;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ENTER) {
+      keyboard_state.start = true;
     }
   };
   listener->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                    cocos2d::Event *event) {
+
+    ControllerState &keyboard_state = Util::getControllerState(0);
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A) {
-      _previousControllerState.left = false;
+      keyboard_state.left = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
-      _previousControllerState.right = false;
+      keyboard_state.right = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
-      _previousControllerState.a = false;
+      keyboard_state.a = false;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ENTER) {
+      keyboard_state.start = false;
     }
   };
 
@@ -148,16 +156,7 @@ void Character::update(float dt) {
     _sprite->stopAllActions();
     _sprite->setSpriteFrame("frame_1_delay-0.08s.gif");
   }
-#if KEYBOARD_ONLY
-  if (_previousControllerState.a && _onGround) {
-    _jumpForces = 7000.0f;
-  }
-  if (_previousControllerState.a)
-    _jumpForces *= 0.9f;
-  else
-    _jumpForces *= 0.5f;
 
-#else
   // Jumping
   if (Util::getControllerState(0).a && _onGround) {
     _jumpForces = 7000.0f;
@@ -166,7 +165,6 @@ void Character::update(float dt) {
     _jumpForces *= 0.9f;
   else
     _jumpForces *= 0.5f;
-#endif
 
   // Accumulate forces and update
   forces += cocos2d::Vec2(0.0f, _jumpForces);
@@ -174,22 +172,7 @@ void Character::update(float dt) {
   setPosition(getPosition() + _velocity * dt);
   _velocity += (forces / 1.0f) * dt;
 
-// Left / Right Movement
-#if KEYBOARD_ONLY
-  if (_previousControllerState.left) {
-    CCLOG("LEFT");
-    _velocity.x -= 15.0f;
-    if (_velocity.x < -250.0f)
-      _velocity.x = -250.0f;
-  }
-
-  if (_previousControllerState.right) {
-    CCLOG("RIGHT");
-    _velocity.x += 15.0f;
-    if (_velocity.x > 250.0f)
-      _velocity.x = 250.0f;
-  }
-#else
+  // Left / Right Movement
   if (Util::getControllerState(0).left) {
     if (!_previousControllerState.left)
       _velocity.x = 0.0f;
@@ -204,7 +187,6 @@ void Character::update(float dt) {
     if (_velocity.x > 250.0f)
       _velocity.x = 250.0f;
   }
-#endif
   // Ground Friction
   if (!Util::getControllerState(0).left && !Util::getControllerState(0).right &&
       _onGround) {
@@ -255,9 +237,7 @@ void Character::update(float dt) {
     _heldItem = nullptr;
   }
 
-// Finalize update
-#ifndef KEYBOARD_ONLY
+  // Finalize update
   _previousControllerState = Util::getControllerState(0);
-#endif
   _onGround = false;
 }
