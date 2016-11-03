@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-up" width="20" height="20" tilewidth="16" tileheight="16" nextobjectid="11">
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="30" height="20" tilewidth="16" tileheight="16" nextobjectid="11">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16">
   <image source="tiles.png" width="256" height="256"/>
   <tile id="21">
@@ -9,9 +9,9 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Tiles" width="20" height="20">
+ <layer name="Tiles" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYKAuUKYBZqUSHjWPNuYRawet45wcvfj0DNX4INc+ctRT2zx86YBQXFEafpSmQWL14bMDm3soNY+WGABEYBQz
+   eJxjYBgYoDyAmJVKWJlEv47aO7LsJdYt2NIoKfZSM43jM5+Qf9H9o4JFjBh7CfmXWvE71O0l1V3EpjFyzB2IcCY23VNiL7XyEjH2UiMPEwOINR+fW9DFcNlBC3vxpWF89g4EBgC/dhoa
   </data>
  </layer>
  <objectgroup name="Objects">

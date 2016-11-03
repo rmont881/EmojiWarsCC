@@ -62,34 +62,35 @@ void BoxCollider::collide(CollideableInterface* collideable) {
 }
 
 void TriangleCollider::collide(CollideableInterface* collideable) {
-//    auto rect = this->getBounds();
-//    float x1 = rect.getMidX();
-//    float y1 = rect.getMidY();
-//    float hw1 = rect.size.width * 0.5f;
-//    float hh1 = rect.size.height * 0.5f;
-//    float x2 = collideable->getPosition().x;
-//    float y2 = collideable->getPosition().y + 8;
-//    cocos2d::Vec2 proj = SAT(x1, y1, hw1, hh1, x2, y2, 8, 8);
-//    if (proj.equals(cocos2d::Vec2::ZERO)) return;
-//    
-//    auto w = this->_bounds.size.width;
-//    auto h = this->_bounds.size.height;
-//    cocos2d::Vec2 hypotenuse(w, -h);
-//    hypotenuse.normalize();
-//    cocos2d::Vec2 perp = hypotenuse.getPerp();
-//    
-//    cocos2d::Vec2 characterBounds(collideable->getPosition().x - this->_bounds.origin.x, collideable->getPosition().y - this->_bounds.origin.y - h);
-//    cocos2d::Vec2 characterProjection = characterBounds.project(perp);
-//    
-//    cocos2d::Vec2 triangleBounds(0, 0);
-//    cocos2d::Vec2 triangleProjection = triangleBounds.project(perp);
-//    
-//    if (characterProjection.x < triangleProjection.x) {
-//        
-//        cocos2d::Vec2 proj(triangleProjection.x - characterProjection.x, triangleProjection.y - characterProjection.y);
-//        collideable->resolveCollision(this, proj);
-//        return;
-//    } else {
-//        return;
-//    }
+    auto bounds = collideable->getBounds();
+    auto rect = this->getBounds();
+    float x1 = rect.getMidX();
+    float y1 = rect.getMidY();
+    float hw1 = rect.size.width * 0.5f;
+    float hh1 = rect.size.height * 0.5f;
+    float x2 = collideable->getPosition().x;
+    float y2 = collideable->getPosition().y + bounds.height * 0.5f;
+    auto proj = SATAABB(x1, y1, hw1, hh1, x2, y2, bounds.width * 0.5f, bounds.height * 0.5f, this->getFlags());
+    if (proj.empty()) return;
+    
+    auto w = this->_bounds.size.width;
+    auto h = this->_bounds.size.height;
+    cocos2d::Vec2 hypotenuse(w, -h);
+    hypotenuse.normalize();
+    cocos2d::Vec2 perp = hypotenuse.getPerp();
+    
+    cocos2d::Vec2 characterBounds(collideable->getPosition().x - collideable->getBounds().width * 0.5f - this->_bounds.origin.x, collideable->getPosition().y - this->_bounds.origin.y - h);
+    cocos2d::Vec2 characterProjection = characterBounds.project(perp);
+    cocos2d::Vec2 triangleBounds(0, 0);
+    cocos2d::Vec2 triangleProjection = triangleBounds.project(perp);
+    
+    if (characterProjection.x < triangleProjection.x) {
+        cocos2d::Vec2 hypotenuse_projection(triangleProjection.x - characterProjection.x, triangleProjection.y - characterProjection.y);
+//        std::vector<cocos2d::Vec2> projs;
+        proj.push_back(hypotenuse_projection);
+        collideable->resolveCollision(this, proj);
+        return;
+    } else {
+        return;
+    }
 }

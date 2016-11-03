@@ -27,6 +27,46 @@
 				<string>frame_0_delay-0.08s.gif</string>
 			</array>
 		</dict>
+		<key>guy_walk</key>
+		<dict>
+			<key>delay</key>
+			<string>0.03</string>
+			<key>frames</key>
+			<array>
+				<string>guy_walking_20_000.png</string>
+				<string>guy_walking_20_001.png</string>
+				<string>guy_walking_20_002.png</string>
+				<string>guy_walking_20_003.png</string>
+				<string>guy_walking_20_004.png</string>
+				<string>guy_walking_20_005.png</string>
+				<string>guy_walking_20_006.png</string>
+				<string>guy_walking_20_007.png</string>
+				<string>guy_walking_20_008.png</string>
+				<string>guy_walking_20_009.png</string>
+				<string>guy_walking_20_010.png</string>
+				<string>guy_walking_20_011.png</string>
+				<string>guy_walking_20_012.png</string>
+				<string>guy_walking_20_013.png</string>
+				<string>guy_walking_20_014.png</string>
+				<string>guy_walking_20_015.png</string>
+				<string>guy_walking_20_016.png</string>
+				<string>guy_walking_20_017.png</string>
+				<string>guy_walking_20_018.png</string>
+				<string>guy_walking_20_019.png</string>
+				<string>guy_walking_20_020.png</string>
+				<string>guy_walking_20_021.png</string>
+				<string>guy_walking_20_022.png</string>
+				<string>guy_walking_20_023.png</string>
+				<string>guy_walking_20_024.png</string>
+				<string>guy_walking_20_025.png</string>
+				<string>guy_walking_20_026.png</string>
+				<string>guy_walking_20_027.png</string>
+				<string>guy_walking_20_028.png</string>
+				<string>guy_walking_20_029.png</string>
+				<string>guy_walking_20_030.png</string>
+				<string>guy_walking_20_031.png</string>
+			</array>
+		</dict>
 	</dict>
 </dict>
 </plist>
