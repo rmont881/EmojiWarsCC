@@ -35,11 +35,29 @@ bool Character::init() {
       keyboard_state.right = true;
       keyboard_state.left = false;
     }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S) {
+      keyboard_state.down = true;
+    }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
       keyboard_state.a = true;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ENTER) {
       keyboard_state.start = true;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_SHIFT) {
+      keyboard_state.x = true;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+      keyboard_state.right_stick.x = 6000.0f;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+      keyboard_state.right_stick.x = -6000.0f;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW) {
+      keyboard_state.right_stick.y = 6000.0f;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+      keyboard_state.right_stick.y = -6000.0f;
     }
   };
   listener->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode,
@@ -52,11 +70,17 @@ bool Character::init() {
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
       keyboard_state.right = false;
     }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S) {
+      keyboard_state.down = false;
+    }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
       keyboard_state.a = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ENTER) {
       keyboard_state.start = false;
+    }
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_SHIFT) {
+      keyboard_state.x = false;
     }
   };
 
@@ -194,6 +218,8 @@ void Character::update(float dt) {
   }
 
   // Draw parabolic arc for aiming thrown items
+  CCLOG("X %f", Util::getControllerState(0).right_stick.x);
+  CCLOG("Y %f", Util::getControllerState(0).right_stick.y);
   if (Util::getControllerState(0).right_stick.length() > 8000 &&
       _heldItem != nullptr && Util::isThrowableItem(_heldItem)) {
 
