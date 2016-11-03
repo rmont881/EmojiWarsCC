@@ -158,10 +158,10 @@ void Character::update(float dt) {
   }
 
   // Jumping
-  if (Util::getControllerState(0).a && _onGround) {
+  if (Util::getControllerState(1).a && _onGround) {
     _jumpForces = 7000.0f;
   }
-  if (Util::getControllerState(0).a)
+  if (Util::getControllerState(1).a)
     _jumpForces *= 0.9f;
   else
     _jumpForces *= 0.5f;
