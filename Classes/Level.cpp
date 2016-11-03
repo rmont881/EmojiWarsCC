@@ -21,7 +21,10 @@ bool Level::init() {
 
 namespace {
     Collider* getColliderForTile(uint32_t gid, int row, int column) {
-        return new BoxCollider(cocos2d::Rect(column * 32, (19 - row) * 32, 32, 32));
+        if (gid == 35)
+            return new BoxCollider(cocos2d::Rect(column * 32, (19 - row) * 32, 32, 32));
+        else if (gid == 36)
+            return new TriangleCollider(cocos2d::Rect(column * 32, (19 - row) * 32, 32, 32), TriangleOrientation::FIRST_QUADRANT);
     }
     bool isCollidableTile(uint32_t gid);
 }
@@ -49,19 +52,29 @@ void Level::createCollidersForTiles() {
             Collider* collider = getColliderForTile(gid, row, column);
             
             int flags = 0x0;
-            if (row - 1 > 1 && layer->getTileGIDAt(cocos2d::Vec2(column, row - 1)) != 35) { flags |= TOP; }
-            if (column + 1 < _width - 1 && layer->getTileGIDAt(cocos2d::Vec2(column + 1, row)) != 35) { flags |= RIGHT; }
-            if (row + 1 < _height - 1 && layer->getTileGIDAt(cocos2d::Vec2(column, row + 1)) != 35) { flags |= BOTTOM; }
-            if (column - 1 > 1 && layer->getTileGIDAt(cocos2d::Vec2(column - 1, row)) != 35) { flags |= LEFT; }
+            if (row - 1 > 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column, row - 1)))) { flags |= TOP; }
+            if (column + 1 < _width - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column + 1, row)))) { flags |= RIGHT; }
+            if (row + 1 < _height - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column, row + 1)))) { flags |= BOTTOM; }
+            if (column - 1 > 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column - 1, row)))) { flags |= LEFT; }
             collider->setFlags(flags);
             
             _colliders.push_back(collider);
         }
     }
+    
+    cocos2d::Rect rect(cocos2d::Vec2(9 * 32, 10 * 32), cocos2d::Size(32, 32));
+    Collider* collider = new TriangleCollider(rect, TriangleOrientation::FIRST_QUADRANT);
+    _colliders.push_back(collider);
+    collider->setFlags(COLLIDE_ALL_SIDES);
+    _debugDraw->setLocalZOrder(1);
+    _debugDraw->drawRect(rect.origin, rect.origin + rect.size, cocos2d::Color4F::GREEN);
+    _debugDraw->drawLine(cocos2d::Vec2(rect.origin.x, rect.origin.y + rect.size.height),
+                         cocos2d::Vec2(rect.origin.x + rect.size.width, rect.origin.y), cocos2d::Color4F::BLUE);
+                         
 }
 
 bool Level::isCollidableTile(uint32_t gid) const {
-    return gid == 35;
+    return gid == 35 || gid == 36;
 }
 
 float Level::getFloatPropertyForTile(const uint32_t gid, const std::string& propName) const {

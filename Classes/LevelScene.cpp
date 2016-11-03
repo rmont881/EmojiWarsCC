@@ -13,7 +13,7 @@
 
 USING_NS_CC;
 
-const std::vector<std::string> SPRITE_SHEETS{{"girl", "test"}};
+const std::vector<std::string> SPRITE_SHEETS = {"girl", "guy"};
 
 Scene* LevelScene::createScene() {
     auto scene = Scene::create();
@@ -92,9 +92,6 @@ void LevelScene::update(float dt) {
         // Update all characters
         _character->update(dt);
         // Update all items
-        for (auto& pickup : _pickups) {
-            pickup->update(dt);
-        }
     }
     
     if (!_previousControllerState.start && Util::getControllerState(0).start) {

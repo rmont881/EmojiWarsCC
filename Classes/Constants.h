@@ -21,7 +21,7 @@
 #define COLLIDE_ALL_SIDES   0xFF
 
 // Screen
-#define RESOLUTION_WIDTH    20 * 32
+#define RESOLUTION_WIDTH    30 * 32
 #define RESOLUTION_HEIGHT   20 * 32
 #define SCREEN_CENTER       cocos2d::Vec2(RESOLUTION_WIDTH / 2, RESOLUTION_HEIGHT / 2)
 

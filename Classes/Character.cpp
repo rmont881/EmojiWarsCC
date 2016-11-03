@@ -97,7 +97,7 @@ bool Character::init() {
   label->setPositionY(100);
 
   _sprite =
-      cocos2d::Sprite::createWithSpriteFrameName("frame_0_delay-0.08s.gif");
+      cocos2d::Sprite::createWithSpriteFrameName("guy_walking_20_001.png");
   _sprite->getTexture()->setAliasTexParameters();
   addChild(_sprite);
 
@@ -137,11 +137,11 @@ void Character::resolveCollision(
 
   // Collision with level
   if (collider->getTag() == 0) {
-    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) > 0.5f) {
+    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) > 0.5f && _velocity.y < 0.0f) {
       _velocity.y = 0.0f;
       _onGround = true;
     }
-    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f) {
+    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f && _velocity.y < 0.0f) {
       _velocity.y = 0.0f;
     }
     if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_X) > 0.5f) {
@@ -170,7 +170,7 @@ void Character::update(float dt) {
     if (_sprite->getNumberOfRunningActions() == 0) {
       // TODO: Create static animation map (name => animation) in init
       auto animation =
-          cocos2d::AnimationCache::getInstance()->getAnimation("run");
+          cocos2d::AnimationCache::getInstance()->getAnimation("guy_walk");
       auto animate = cocos2d::Animate::create(animation);
       _sprite->getSpriteFrame()->setAnchorPoint(
           cocos2d::Vec2::ANCHOR_MIDDLE_BOTTOM);
@@ -178,7 +178,7 @@ void Character::update(float dt) {
     }
   } else {
     _sprite->stopAllActions();
-    _sprite->setSpriteFrame("frame_1_delay-0.08s.gif");
+    _sprite->setSpriteFrame("guy_walking_20_001.png");
   }
 
   // Jumping
