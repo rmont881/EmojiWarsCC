@@ -64,6 +64,7 @@
 		A257151C1DAC745400F0C92E /* GamePad.m in Sources */ = {isa = PBXBuildFile; fileRef = A257151B1DAC745400F0C92E /* GamePad.m */; };
 		A25715211DAC90F800F0C92E /* test.tmx in Resources */ = {isa = PBXBuildFile; fileRef = A257151F1DAC90F800F0C92E /* test.tmx */; };
 		A25715221DAC90F800F0C92E /* tiles.png in Resources */ = {isa = PBXBuildFile; fileRef = A25715201DAC90F800F0C92E /* tiles.png */; };
+		A2C2C30C1DCFE50E00E8830A /* Animations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2C2C3081DCFE12400E8830A /* Animations.cpp */; };
 		A2CF72A31DB70B9B00B01A7C /* Character.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2CF72A11DB70B9B00B01A7C /* Character.cpp */; };
 		A2CF72A61DB8590F00B01A7C /* Pickup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2CF72A41DB8590F00B01A7C /* Pickup.cpp */; };
 		A2CF72A91DB85CC100B01A7C /* Collision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2CF72A71DB85CC100B01A7C /* Collision.cpp */; };
@@ -179,6 +180,8 @@
 		A257151E1DAC746400F0C92E /* GamePad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GamePad.h; sourceTree = "<group>"; };
 		A257151F1DAC90F800F0C92E /* test.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.tmx; sourceTree = "<group>"; };
 		A25715201DAC90F800F0C92E /* tiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tiles.png; sourceTree = "<group>"; };
+		A2C2C3081DCFE12400E8830A /* Animations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animations.cpp; sourceTree = "<group>"; };
+		A2C2C3091DCFE12400E8830A /* Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animations.h; sourceTree = "<group>"; };
 		A2CF72A11DB70B9B00B01A7C /* Character.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Character.cpp; sourceTree = "<group>"; };
 		A2CF72A21DB70B9B00B01A7C /* Character.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Character.h; sourceTree = "<group>"; };
 		A2CF72A41DB8590F00B01A7C /* Pickup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pickup.cpp; sourceTree = "<group>"; };
@@ -354,6 +357,8 @@
 				A22ABCA61DBDD2CA000BB13C /* Level.cpp */,
 				A22ABCA71DBDD2CA000BB13C /* Level.h */,
 				A22ABCA91DC05660000BB13C /* Constants.h */,
+				A2C2C3081DCFE12400E8830A /* Animations.cpp */,
+				A2C2C3091DCFE12400E8830A /* Animations.h */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -573,6 +578,7 @@
 				A2CF72A61DB8590F00B01A7C /* Pickup.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				46880B8B19C43A87006E1F66 /* LevelScene.cpp in Sources */,
+				A2C2C30C1DCFE50E00E8830A /* Animations.cpp in Sources */,
 				A2CF72A31DB70B9B00B01A7C /* Character.cpp in Sources */,
 				A2CF72AC1DB86FC000B01A7C /* Menu.cpp in Sources */,
 				A257151C1DAC745400F0C92E /* GamePad.m in Sources */,

@@ -11,11 +11,8 @@
  </tileset>
  <layer name="Tiles" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgYoDyAmJVKWJlEv47aO7LsJdYt2NIoKfZSM43jM5+Qf9H9o4JFjBh7CfmXWvE71O0l1V3EpjFyzB2IcCY23VNiL7XyEjH2UiMPEwOINR+fW9DFcNlBC3vxpWF89g4EBgC/dhoa
+   eJzVk1EKwCAMQ/vjQYZu9z/ifhQ2aUrEus5CflR8TUlFYioHKjkpD3rdiXtUfcnVmOnx10q/aM4a95L3LBCX7QVlVGNqXM+MIybjt+ms90XxyHB7Lyx31i+qv3JH+0Jz3cUvyllTAe9muF67xHA9dpgp9n+rl/4MMVZwrQxb3AjdvcgbxA==
   </data>
  </layer>
- <objectgroup name="Objects">
-  <object id="9" x="144" y="80" width="32" height="32"/>
-  <object id="10" x="240" y="128" width="32" height="16"/>
- </objectgroup>
+ <objectgroup name="Objects"/>
 </map>

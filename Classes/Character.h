@@ -27,6 +27,7 @@ public:
     virtual const cocos2d::Size& getBounds() const override { return _bounds; }
     virtual void resolveCollision(Collider* collider, const std::vector<cocos2d::Vec2>& collisionVectors) override;
 private:
+    
     // Display
     cocos2d::Node* _parabolaNode = nullptr;
     cocos2d::Sprite* _sprite = nullptr;

@@ -27,10 +27,84 @@
 				<string>frame_0_delay-0.08s.gif</string>
 			</array>
 		</dict>
-		<key>guy_walk</key>
+		<key>guy_falling</key>
 		<dict>
 			<key>delay</key>
 			<string>0.03</string>
+			<key>frames</key>
+			<array>
+				<string>guy_hit_20_000.png</string>
+				<string>guy_hit_20_001.png</string>
+				<string>guy_hit_20_002.png</string>
+				<string>guy_hit_20_003.png</string>
+				<string>guy_hit_20_004.png</string>
+				<string>guy_hit_20_005.png</string>
+				<string>guy_hit_20_006.png</string>
+				<string>guy_hit_20_007.png</string>
+				<string>guy_hit_20_008.png</string>
+				<string>guy_hit_20_009.png</string>
+				<string>guy_hit_20_010.png</string>
+				<string>guy_hit_20_011.png</string>
+			</array>
+		</dict>
+		<key>guy_jumping</key>
+		<dict>
+			<key>delay</key>
+			<string>0.03</string>
+			<key>frames</key>
+			<array>
+				<string>guy_jump_start_20_000.png</string>
+				<string>guy_jump_start_20_001.png</string>
+				<string>guy_jump_start_20_002.png</string>
+				<string>guy_jump_start_20_003.png</string>
+				<string>guy_jump_start_20_004.png</string>
+				<string>guy_jump_start_20_005.png</string>
+				<string>guy_jump_start_20_006.png</string>
+				<string>guy_jump_start_20_007.png</string>
+				<string>guy_jump_start_20_008.png</string>
+			</array>
+		</dict>
+		<key>guy_idle</key>
+		<dict>
+			<key>delay</key>
+			<string>0.03</string>
+			<key>frames</key>
+			<array>
+				<string>guy_idle_001.png</string>
+				<string>guy_idle_002.png</string>
+				<string>guy_idle_003.png</string>
+				<string>guy_idle_004.png</string>
+				<string>guy_idle_005.png</string>
+				<string>guy_idle_006.png</string>
+				<string>guy_idle_007.png</string>
+				<string>guy_idle_008.png</string>
+				<string>guy_idle_009.png</string>
+				<string>guy_idle_010.png</string>
+				<string>guy_idle_011.png</string>
+				<string>guy_idle_012.png</string>
+				<string>guy_idle_013.png</string>
+				<string>guy_idle_014.png</string>
+				<string>guy_idle_015.png</string>
+				<string>guy_idle_014.png</string>
+				<string>guy_idle_013.png</string>
+				<string>guy_idle_012.png</string>
+				<string>guy_idle_011.png</string>
+				<string>guy_idle_010.png</string>
+				<string>guy_idle_009.png</string>
+				<string>guy_idle_008.png</string>
+				<string>guy_idle_007.png</string>
+				<string>guy_idle_006.png</string>
+				<string>guy_idle_005.png</string>
+				<string>guy_idle_004.png</string>
+				<string>guy_idle_003.png</string>
+				<string>guy_idle_002.png</string>
+				<string>guy_idle_001.png</string>
+			</array>
+		</dict>
+		<key>guy_walk</key>
+		<dict>
+			<key>delay</key>
+			<string>0.02</string>
 			<key>frames</key>
 			<array>
 				<string>guy_walking_20_000.png</string>
