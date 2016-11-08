@@ -142,7 +142,7 @@ void Character::resolveCollision(
       _velocity.y = 0.0f;
       _onGround = true;
     }
-//    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) == 0.0f && _velocity.y < 0.0f) {
+//    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f && _velocity.y < 0.0f) {
 //      _velocity.y = 0.0f;
 //    }
     if (fabs(closest.getNormalized().dot(cocos2d::Vec2::UNIT_X)) > 0.9f) {
