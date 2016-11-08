@@ -12,17 +12,36 @@
 IOHIDManagerRef hidManager;
 
 std::map<void *, ControllerState> controllerStates;
+std::map<int, ControllerState> playerStates;
 
 namespace Util {
 #if KEYBOARD_ONLY
-ControllerState &getControllerState(size_t index) {
+ControllerState &getControllerState(int index) {
+  return playerStates[index];
   return controllerStates.begin()->second;
 }
 #else
 const ControllerState &getControllerState(size_t index) {
+  for(auto iterator = controllerStates.begin(); iterator != controllerStates.end(); iterator++) {
+    if(iterator->second.player == index) {
+      return iterator->second;
+    }
+  }
+  return playerStates[index];
   return controllerStates.begin()->second;
 }
 #endif
+}
+
+void initGamepads() {
+  playerStates[0];
+  playerStates[0].player = 1;
+  playerStates[1];
+  playerStates[1].player = 2;
+  playerStates[2];
+  playerStates[2].player = 3;
+  playerStates[3];
+  playerStates[3].player = 4;
 }
 
 void initGamepad(struct ControllerState &state) {
@@ -43,6 +62,8 @@ void initGamepad(struct ControllerState &state) {
   state.right_stick = cocos2d::Vec2::ZERO;
   state.left_trigger = 0;
   state.right_trigger = 0;
+  state.player = -1;
+  state.controller = nullptr;
 }
 
 static CFMutableDictionaryRef
@@ -89,8 +110,17 @@ hu_CreateDeviceMatchingDictionary(UInt32 inUsagePage, UInt32 inUsage) {
 void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender,
                      IOHIDDeviceRef device) {
   NSLog(@"Gamepad was plugged in");
-  controllerStates[device];
-  initGamepad(controllerStates[device]);
+  if(playerStates.size() == 0) {
+    initGamepads();
+  }
+  for(int i = 0;i<4;i++) {
+    if(playerStates[i].controller == nullptr) {
+      playerStates[i].controller = device;
+      break;
+    }
+  }
+//  controllerStates[device];
+//  initGamepad(controllerStates[device]);
 }
 
 void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender,
@@ -107,51 +137,59 @@ void gamepadAction(void *inContext, IOReturn inResult, void *inSender,
   uint32_t usage = IOHIDElementGetUsage(element);
   int state = IOHIDValueGetIntegerValue(value);
 
-  ControllerState &controller = controllerStates.at(inSender);
-
-  if (usagePage == kHIDPage_Button) {
-    if (usage == A)
-      controller.a = state;
-    else if (usage == B)
-      controller.b = state;
-    else if (usage == X)
-      controller.x = state;
-    else if (usage == Y)
-      controller.y = state;
-    else if (usage == LB)
-      controller.left_shoulder = state;
-    else if (usage == RB)
-      controller.right_shoulder = state;
-    else if (usage == L_STICK)
-      controller.left_stick_press = state;
-    else if (usage == R_STICK)
-      controller.right_stick_press = state;
-    else if (usage == START)
-      controller.start = state;
-    else if (usage == BACK)
-      controller.back = state;
-    else if (usage == DPAD_UP)
-      controller.up = state;
-    else if (usage == DPAD_DOWN)
-      controller.down = state;
-    else if (usage == DPAD_LEFT)
-      controller.left = state;
-    else if (usage == DPAD_RIGHT)
-      controller.right = state;
+  ControllerState* controller = nullptr;
+  for(auto iterator = playerStates.begin(); iterator != playerStates.end(); iterator++) {
+    if(iterator->second.controller == inSender) {
+      controller = &iterator->second;
+      break;
+    }
   }
-  if (usagePage == kHIDPage_GenericDesktop) {
-    if (usage == LSTICK_X)
-      controller.left_stick.x = state;
-    else if (usage == LSTICK_Y)
-      controller.left_stick.y = state;
-    else if (usage == RSTICK_X)
-      controller.right_stick.x = state;
-    else if (usage == RSTICK_Y)
-      controller.right_stick.y = state;
-    else if (usage == TRIGGER_LEFT)
-      controller.left_trigger = state;
-    else if (usage == RSTICK_Y)
-      controller.right_trigger = state;
+
+  if(controller != nullptr) {
+    if (usagePage == kHIDPage_Button) {
+      if (usage == A)
+        controller->a = state;
+      else if (usage == B)
+        controller->b = state;
+      else if (usage == X)
+        controller->x = state;
+      else if (usage == Y)
+        controller->y = state;
+      else if (usage == LB)
+        controller->left_shoulder = state;
+      else if (usage == RB)
+        controller->right_shoulder = state;
+      else if (usage == L_STICK)
+        controller->left_stick_press = state;
+      else if (usage == R_STICK)
+        controller->right_stick_press = state;
+      else if (usage == START)
+        controller->start = state;
+      else if (usage == BACK)
+        controller->back = state;
+      else if (usage == DPAD_UP)
+        controller->up = state;
+      else if (usage == DPAD_DOWN)
+        controller->down = state;
+      else if (usage == DPAD_LEFT)
+        controller->left = state;
+      else if (usage == DPAD_RIGHT)
+        controller->right = state;
+    }
+    if (usagePage == kHIDPage_GenericDesktop) {
+      if (usage == LSTICK_X)
+        controller->left_stick.x = state;
+      else if (usage == LSTICK_Y)
+        controller->left_stick.y = state;
+      else if (usage == RSTICK_X)
+        controller->right_stick.x = state;
+      else if (usage == RSTICK_Y)
+        controller->right_stick.y = state;
+      else if (usage == TRIGGER_LEFT)
+        controller->left_trigger = state;
+      else if (usage == RSTICK_Y)
+        controller->right_trigger = state;
+    }
   }
 }
 
