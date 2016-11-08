@@ -41,8 +41,8 @@ public:
     virtual const cocos2d::Rect& getBounds() = 0;
     virtual void collide(CollideableInterface*) = 0;
     virtual void setPosition(const cocos2d::Vec2& pos) { _bounds.origin = pos; }
-    virtual void setFlags(int flags) { _flags = flags; }
-    virtual int getFlags() const { return _flags; }
+    virtual void setFlags(std::bitset<32> flags) { _flags = flags; }
+    virtual std::bitset<32> getFlags() const { return _flags; }
     virtual int getTag() const { return _tag; }
     virtual void setTag(int tag) { _tag = tag; }
     virtual void* getParent() const { return _parent; }
@@ -50,7 +50,7 @@ protected:
     void* _parent;
     cocos2d::Rect _bounds;
     int _tag = 0;
-    int _flags = 0;
+    std::bitset<32> _flags = 0;
 };
 
 class BoxCollider : public Collider {
@@ -66,6 +66,7 @@ public:
     TriangleCollider(const cocos2d::Vec2& pos, const cocos2d::Size& size, TriangleOrientation orientation) : Collider(cocos2d::Rect(pos, size), nullptr), _orientation(orientation) { }
     TriangleCollider(const cocos2d::Rect& bounds, TriangleOrientation orientation) : Collider(bounds, nullptr), _orientation(orientation) { }
     const cocos2d::Rect& getBounds() override { return _bounds; }
+    virtual void setFlags(std::bitset<32> flags) override;
     virtual void collide(CollideableInterface* character) override;
 private:
     TriangleOrientation _orientation;

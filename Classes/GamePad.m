@@ -132,6 +132,7 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender,
 
 void gamepadAction(void *inContext, IOReturn inResult, void *inSender,
                    IOHIDValueRef value) {
+    
   IOHIDElementRef element = IOHIDValueGetElement(value);
   uint32_t usagePage = IOHIDElementGetUsagePage(element);
   uint32_t usage = IOHIDElementGetUsage(element);

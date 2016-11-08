@@ -4,8 +4,9 @@
 //
 //  Created by Josh Bodily on 10/18/16.
 //
-// til
+//
 
+#include "Animations.h"
 #include "Character.h"
 #include "Constants.h"
 #include "GamePad.h"
@@ -94,11 +95,11 @@ bool Character::init() {
   label->enableOutline(cocos2d::Color4B::WHITE, 2);
   label->setTextColor(cocos2d::Color4B::BLACK);
   label->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
-  label->setPositionY(100);
+  label->setPositionY(150);
 
-  _sprite =
-      cocos2d::Sprite::createWithSpriteFrameName("guy_walking_20_001.png");
+  _sprite = cocos2d::Sprite::createWithSpriteFrameName("guy_walking_20_001.png");
   _sprite->getTexture()->setAliasTexParameters();
+    _sprite->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE_BOTTOM);
   addChild(_sprite);
 
   _bounds = cocos2d::Size(20.0f, 50.0f);
@@ -141,15 +142,16 @@ void Character::resolveCollision(
       _velocity.y = 0.0f;
       _onGround = true;
     }
-    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f && _velocity.y < 0.0f) {
-      _velocity.y = 0.0f;
-    }
-    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_X) > 0.5f) {
+//    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f && _velocity.y < 0.0f) {
+//      _velocity.y = 0.0f;
+//    }
+    if (fabs(closest.getNormalized().dot(cocos2d::Vec2::UNIT_X)) > 0.9f) {
       _velocity.x = 0.0f;
     }
     position += closest;
     setPosition(position);
   }
+    
   // Pickups
   else if (collider->getTag() == WEAPON_TAG &&
            !closest.equals(cocos2d::Vec2::ZERO)) {
@@ -160,30 +162,30 @@ void Character::resolveCollision(
   }
 }
 
+
+
 void Character::update(float dt) {
   dt = FIXED_TIME_STEP;
 
   cocos2d::Vec2 forces = GRAVITY;
 
-  if (std::fabs(_velocity.x) > 20.0f) {
+  if (std::fabs(_velocity.x) > 20.0f && _onGround) {
     _sprite->setFlippedX(_velocity.x < 0.0);
-    if (_sprite->getNumberOfRunningActions() == 0) {
-      // TODO: Create static animation map (name => animation) in init
-      auto animation =
-          cocos2d::AnimationCache::getInstance()->getAnimation("guy_walk");
-      auto animate = cocos2d::Animate::create(animation);
-      _sprite->getSpriteFrame()->setAnchorPoint(
-          cocos2d::Vec2::ANCHOR_MIDDLE_BOTTOM);
-      _sprite->runAction(animate);
-    }
-  } else {
-    _sprite->stopAllActions();
-    _sprite->setSpriteFrame("guy_walking_20_001.png");
+      Animations::runAnimation(_sprite, "guy_walk");
+  } else if (_onGround) {
+     Animations::runAnimation(_sprite, "guy_idle");
   }
+    
+    if (_velocity.y < -700) {
+        Animations::runAnimation(_sprite, "guy_falling");
+    } else {
+        _sprite->stopActionByTag(3);
+    }
 
   // Jumping
   if (Util::getControllerState(0).a && _onGround) {
     _jumpForces = 7000.0f;
+      Animations::runAnimation(_sprite, "guy_jumping");
   }
   if (Util::getControllerState(0).a)
     _jumpForces *= 0.9f;
@@ -218,8 +220,6 @@ void Character::update(float dt) {
   }
 
   // Draw parabolic arc for aiming thrown items
-  CCLOG("X %f", Util::getControllerState(0).right_stick.x);
-  CCLOG("Y %f", Util::getControllerState(0).right_stick.y);
   if (Util::getControllerState(0).right_stick.length() > 8000 &&
       _heldItem != nullptr && Util::isThrowableItem(_heldItem)) {
 

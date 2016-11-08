@@ -3,6 +3,7 @@
 #include "2d/CCTMXTiledMap.h"
 #include "ui/UILayout.h"
 
+#include "Animations.h"
 #include "GamePad.h"
 #include "Menu.h"
 #include "Level.h"
@@ -32,6 +33,7 @@ bool LevelScene::init() {
     initSpriteSheets();
     initAnimations();
     
+    
     // Create the map
     _map = Level::create();
     _map->load("test.tmx");
@@ -50,6 +52,8 @@ bool LevelScene::init() {
     _pauseLabel->setTextColor(cocos2d::Color4B::BLACK);
     _pauseLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
     _pauseLabel->setPosition(SCREEN_CENTER);
+    _pauseLabel->setVisible(false);
+    _pauseLabel->setOpacity(200);
     addChild(_pauseLabel);
     
     return true;
@@ -67,7 +71,7 @@ void LevelScene::initSpriteSheets() {
 }
 
 void LevelScene::initAnimations() {
-    cocos2d::AnimationCache::getInstance()->addAnimationsWithFile("animations.plist");
+    Animations::loadAnimations("animations.plist");
 }
 
 void LevelScene::collisionDetection() {
