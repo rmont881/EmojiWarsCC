@@ -26,12 +26,12 @@ bool Character::init() {
   listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                   cocos2d::Event *event) {
     ControllerState &keyboard_state = Util::getControllerState(0);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.left = true;
       keyboard_state.right = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.right = true;
       keyboard_state.left = false;
@@ -65,10 +65,10 @@ bool Character::init() {
                                    cocos2d::Event *event) {
 
     ControllerState &keyboard_state = Util::getControllerState(0);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       keyboard_state.left = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       keyboard_state.right = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S) {
@@ -142,7 +142,7 @@ void Character::resolveCollision(
       _velocity.y = 0.0f;
       _onGround = true;
     }
-//    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f && _velocity.y < 0.0f) {
+//    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) == 0.0f && _velocity.y < 0.0f) {
 //      _velocity.y = 0.0f;
 //    }
     if (fabs(closest.getNormalized().dot(cocos2d::Vec2::UNIT_X)) > 0.9f) {
