@@ -9,6 +9,9 @@
 #include "Menu.h"
 #include "GamePad.h"
 #include "LevelScene.h"
+#include "Constants.h"
+
+const std::vector<std::string> SPRITE_SHEETS = {"girl", "guy"};
 
 cocos2d::Scene* MenuScene::createScene() {
     auto scene = cocos2d::Scene::create();
@@ -19,30 +22,52 @@ cocos2d::Scene* MenuScene::createScene() {
 
 bool MenuScene::init() {
     if (!Layer::init()) return false;
+    initSpriteSheets();
     
-    auto label = cocos2d::Label::create("EMOJI\nWARS", "fonts/ARCADECLASSIC.TTF", 100);
+    auto label = cocos2d::Label::create("EMOJI\nWARS", "fonts/ARCADECLASSIC.TTF", 90);
     label->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
     addChild(label);
-    auto count = label->getChildrenCount();
-    label->setPosition(cocos2d::Vec2(1024 / 2, 768 / 2 + 200));
+    label->setPosition(cocos2d::Vec2(RESOLUTION_WIDTH / 2, RESOLUTION_HEIGHT / 2 + 140));
     
 //    label->runAction(cocos2d::FadeOut::create(1.0f));
     label->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::ScaleTo::create(0.5f, 1.1f), cocos2d::ScaleTo::create(0.5f, 1.0f), nullptr)));
     
     for (int i = 1; i < 5; ++i) {
-        char buffer[10];
-        sprintf(buffer, "%d Players", i);
+        char buffer[12];
+        sprintf(buffer, "Player %d", i);
         if (i == 1) buffer[8] = '\0';
         auto label = cocos2d::Label::create(buffer, "fonts/ARCADECLASSIC.TTF", 48);
         addChild(label);
-        auto count = label->getChildrenCount();
         label->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
-        label->setPosition(cocos2d::Vec2(1024 / 2, 450 - i * 50));
+        label->setPosition(cocos2d::Vec2(RESOLUTION_WIDTH / 3, 350 - i * 50));
+      
+        char join_buffer[12];
+        sprintf(join_buffer, "Press ");
+        auto join_label = cocos2d::Label::create(join_buffer, "fonts/ARCADECLASSIC.TTF", 48);
+        join_label->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
+        join_label->setPosition(cocos2d::Vec2((RESOLUTION_WIDTH / 3) * 2, 350 - i * 50));
+        join_label->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::ScaleTo::create(0.5f, 1.1f), cocos2d::ScaleTo::create(0.5f, 1.0f), nullptr)));
+        auto sprite = cocos2d::Sprite::createWithSpriteFrameName("a_button.png");
+        sprite->setPosition(join_label->getPositionX() + 110.0f, 350 - i * 50);
+        sprite->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::ScaleTo::create(0.5f, 1.1f), cocos2d::ScaleTo::create(0.5f, 1.0f), nullptr)));
+        addChild(join_label);
+        addChild(sprite);
     }
     
     scheduleUpdate();
     
     return true;
+}
+
+void MenuScene::initSpriteSheets() {
+  for (const auto& fileName : SPRITE_SHEETS) {
+    char name[128];
+    sprintf(name, "%s.plist", fileName.c_str());
+    cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(name);
+    sprintf(name, "%s.png", fileName.c_str());
+    auto spriteSheet = cocos2d::SpriteBatchNode::create(name);
+    addChild(spriteSheet);
+  }
 }
 
 void MenuScene::update(float dt) {

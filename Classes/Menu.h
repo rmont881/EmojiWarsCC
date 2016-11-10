@@ -16,6 +16,7 @@ public:
 private:
     CREATE_FUNC(MenuScene);
     virtual bool init();
+    virtual void initSpriteSheets();
     virtual void update(float dt);
 };
 

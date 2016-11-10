@@ -13,6 +13,7 @@ IOHIDManagerRef hidManager;
 
 std::map<void *, ControllerState> controllerStates;
 std::map<int, ControllerState> playerStates;
+bool listenForInput = false;
 
 namespace Util {
 #if KEYBOARD_ONLY
@@ -31,6 +32,9 @@ const ControllerState &getControllerState(size_t index) {
   return controllerStates.begin()->second;
 }
 #endif
+void setListenForInput(bool listen) {
+  listenForInput = listen;
+}
 }
 
 void initGamepads() {
