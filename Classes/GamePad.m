@@ -117,12 +117,6 @@ void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender,
   if(playerStates.size() == 0) {
     initGamepads();
   }
-  for(int i = 0;i<4;i++) {
-    if(playerStates[i].controller == nullptr) {
-      playerStates[i].controller = device;
-      break;
-    }
-  }
 //  controllerStates[device];
 //  initGamepad(controllerStates[device]);
 }
@@ -136,6 +130,20 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender,
 
 void gamepadAction(void *inContext, IOReturn inResult, void *inSender,
                    IOHIDValueRef value) {
+  
+  if(listenForInput) {
+    bool alreadySet = false;
+    for(int i = 0;i<4;i++) {
+      if(playerStates[i].controller == inSender) {
+        alreadySet = true;
+        break;
+      }
+      if(!alreadySet && playerStates[i].controller == nullptr) {
+        playerStates[i].controller = inSender;
+        break;
+      }
+    }
+  }
     
   IOHIDElementRef element = IOHIDValueGetElement(value);
   uint32_t usagePage = IOHIDElementGetUsagePage(element);

@@ -23,6 +23,7 @@ cocos2d::Scene* MenuScene::createScene() {
 bool MenuScene::init() {
     if (!Layer::init()) return false;
     initSpriteSheets();
+  Util::setListenForInput(true);
     
     auto label = cocos2d::Label::create("EMOJI\nWARS", "fonts/ARCADECLASSIC.TTF", 90);
     label->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
@@ -52,11 +53,25 @@ bool MenuScene::init() {
         sprite->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::ScaleTo::create(0.5f, 1.1f), cocos2d::ScaleTo::create(0.5f, 1.0f), nullptr)));
         addChild(join_label);
         addChild(sprite);
+      //Total hack, clean this up later
+      if(i==1) {
+        labelPOne = join_label;
+      } else if(i==2) {
+        labelPTwo = join_label;
+      } else if(i==3) {
+        labelPThree = join_label;
+      } else if(i==4) {
+        labelPFour = join_label;
+      }
     }
     
     scheduleUpdate();
     
     return true;
+}
+
+MenuScene::~MenuScene() {
+  Util::setListenForInput(false);
 }
 
 void MenuScene::initSpriteSheets() {
@@ -74,4 +89,29 @@ void MenuScene::update(float dt) {
     if (Util::getControllerState(0).start) {
         cocos2d::Director::getInstance()->replaceScene(LevelScene::createScene());
     }
+  if(!playerOne) {
+    if(Util::getControllerState(0).controller != nullptr) {
+      playerOne = true;
+      labelPOne->setString("Joined");
+    }
+  }
+  if(!playerTwo) {
+    if(Util::getControllerState(1).controller != nullptr) {
+      playerTwo = true;
+      labelPTwo->setString("Joined");
+    }
+  }
+  if(!playerThree) {
+    if(Util::getControllerState(2).controller != nullptr) {
+      playerThree = true;
+      labelPThree->setString("Joined");
+    }
+  }
+  if(!playerFour) {
+    if(Util::getControllerState(3).controller != nullptr) {
+      playerFour = true;
+      labelPFour->setString("Joined");
+    }
+  }
+  
 }
