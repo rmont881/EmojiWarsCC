@@ -43,4 +43,7 @@ private:
     
     ControllerState _previousControllerState;
     PickupableInterface* _heldItem = nullptr;
+  int _player_id = 0;
+
+  static int _number_of_players;
 };

@@ -39,9 +39,11 @@ bool LevelScene::init() {
     _map->load("test.tmx");
     addChild(_map);
 
-    // Create and add the character
-    _character = Character::create();
-    addChild(_character);
+    // Create and add the characters
+    for (auto &character : _characters) {
+        character = Character::create();
+        addChild(character);
+    }
     
     Weapon* weapon = Weapon::create();
     _pickups.push_back(weapon);
@@ -77,37 +79,53 @@ void LevelScene::initAnimations() {
 void LevelScene::collisionDetection() {
     // TODO: Broad-phase
 
-    // Collide everything against the level
-    for (auto collider : _map->getColliders()) {
-        collider->collide(_character);
-        for (auto weapon : _pickups) {
-            collider->collide(weapon);
-        }
+  // Collide everything against the level
+  for (auto collider : _map->getColliders()) {
+    for (auto character : _characters) {
+      collider->collide(character);
     }
-    
-    // Collide pickups against players
-    for (auto pickup : _pickups) {
-        pickup->getCollideable()->collide(_character);
+    for (auto weapon : _pickups) {
+      collider->collide(weapon);
     }
+  }
+
+  // Collide pickups against players
+  for (auto pickup : _pickups) {
+    for (auto character : _characters) {
+      pickup->getCollideable()->collide(character);
+    }
+  }
 }
 
 void LevelScene::update(float dt) {
-    if (!_paused) {
-        // Update all characters
-        _character->update(dt);
-        // Update all items
+  if (!_paused) {
+    // Update all characters
+    for (auto character : _characters) {
+      character->update(dt);
     }
     
-    if (!_previousControllerState.start && Util::getControllerState(0).start) {
-        _paused = !_paused;
-        _pauseLabel->setVisible(_paused);
-        _character->pause();
+    for(int character_num = 0;character_num<NUM_PLAYERS;++character_num){
+        if(!_previousControllerState[character_num].start &&Util::getControllerState(character_num).start){
+            _paused = !_paused;
+            break;
+        }
     }
+      
+    if(_paused){
+        _pauseLabel->setVisible(_paused);
+        for(auto character:_characters){
+            character->pause();
+        }
+    }
+
     if (_paused && Util::getControllerState(0).back) {
         cocos2d::Director::getInstance()->replaceScene(MenuScene::createScene());
         return;
     }
     
     collisionDetection();
-    _previousControllerState = Util::getControllerState(0);
+    for(int character_num = 0;character_num<NUM_PLAYERS;++character_num){
+        _previousControllerState[character_num] = Util::getControllerState(character_num);
+    }
+  }
 }
