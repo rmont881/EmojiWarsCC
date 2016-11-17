@@ -49,6 +49,7 @@ bool MenuScene::init() {
         join_label->setPosition(cocos2d::Vec2((RESOLUTION_WIDTH / 3) * 2, 350 - i * 50));
         join_label->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::ScaleTo::create(0.5f, 1.1f), cocos2d::ScaleTo::create(0.5f, 1.0f), nullptr)));
         auto sprite = cocos2d::Sprite::createWithSpriteFrameName("a_button.png");
+      sprite->getTexture()->setAliasTexParameters();
         sprite->setPosition(join_label->getPositionX() + 110.0f, 350 - i * 50);
         sprite->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::ScaleTo::create(0.5f, 1.1f), cocos2d::ScaleTo::create(0.5f, 1.0f), nullptr)));
         addChild(join_label);
