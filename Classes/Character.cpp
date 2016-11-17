@@ -10,8 +10,8 @@
 #include "Character.h"
 #include "Constants.h"
 #include "GamePad.h"
-#include "Pickup.h"
 #include "Level.h"
+#include "Pickup.h"
 #include "ui/UILayout.h"
 
 const cocos2d::Vec2 GRAVITY(0.0f, GRAVITY_Y);
@@ -98,12 +98,13 @@ bool Character::init() {
   label->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
   label->setPositionY(100);
 
-  _sprite = cocos2d::Sprite::createWithSpriteFrameName("guy_walking_20_001.png");
+  _sprite =
+      cocos2d::Sprite::createWithSpriteFrameName("guy_walking_20_001.png");
   _sprite->setScale(0.75f);
   _sprite->getTexture()->setAliasTexParameters();
   _sprite->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE_BOTTOM);
   addChild(_sprite);
-//  _sprite->setColor(cocos2d::Color3B::RED);
+  //  _sprite->setColor(cocos2d::Color3B::RED);
 
   _bounds = cocos2d::Size(20.0f, 50.0f);
 #ifdef DEBUG_DRAW
@@ -136,11 +137,13 @@ void Character::resolveCollision(
     Collider *collider, const std::vector<cocos2d::Vec2> &collisionVectors) {
 
   auto position = getPosition();
-  auto closest = Util::findClosestResolution(collisionVectors, position, _oldPosition);
+  auto closest =
+      Util::findClosestResolution(collisionVectors, position, _oldPosition);
 
   // Collision with level
   if (collider->getTag() == 0) {
-    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) > 0.5f && _velocity.y < 0.0f) {
+    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) > 0.5f &&
+        _velocity.y < 0.0f) {
       _velocity.y = 0.0f;
       _surfaceNormal = closest.getNormalized();
     }
@@ -150,14 +153,15 @@ void Character::resolveCollision(
     if (fabs(closest.getNormalized().dot(cocos2d::Vec2::UNIT_X)) > 0.9f) {
       _velocity.x = 0.0f;
       _speed = 0.0f;
-//      CCLOG("%f", _velocity.x);
+      //      CCLOG("%f", _velocity.x);
     }
     position += closest;
     setPosition(position);
   }
-    
+
   // Pickups
-  else if (collider->getTag() == WEAPON_TAG && !closest.equals(cocos2d::Vec2::ZERO)) {
+  else if (collider->getTag() == WEAPON_TAG &&
+           !closest.equals(cocos2d::Vec2::ZERO)) {
     if (Util::getControllerState(0).down && Util::getControllerState(0).x) {
       collider->setFlags(0);
       _heldItem = static_cast<PickupableInterface *>(collider->getParent());
@@ -172,21 +176,22 @@ void Character::update(float dt) {
 
   if (std::fabs(_speed) > 20.0 && _onGround) {
     _sprite->setFlippedX(_velocity.x < 0.0);
-      Animations::runAnimation(_sprite, "guy_walk");
+    Animations::runAnimation(_sprite, "guy_walk");
     CCLOG("%f", _speed);
   } else if (_onGround) {
-     Animations::runAnimation(_sprite, "guy_idle");
+    Animations::runAnimation(_sprite, "guy_idle");
   }
 
   if (_velocity.y < -700) {
-      Animations::runAnimation(_sprite, "guy_falling");
+    Animations::runAnimation(_sprite, "guy_falling");
   } else {
-      _sprite->stopActionByTag(3);
+    _sprite->stopActionByTag(3);
   }
 
   // Jumping
   bool jumping = false;
-  if (!_previousControllerState.a && Util::getControllerState(0).a && _onGround) {
+  if (!_previousControllerState.a && Util::getControllerState(0).a &&
+      _onGround) {
     CCLOG("Jumping");
     _velocity.y = 0.0f;
     _jumpForces = 7000.0f;
@@ -197,10 +202,12 @@ void Character::update(float dt) {
     _jumpForces *= 0.9f;
   else
     _jumpForces *= 0.5f;
-  
+
   // ray cast down
-  float rayCast = Level::_currentLevel->rayCast(cocos2d::Vec2(getPositionX() - _bounds.width * 0.45f, getPositionY()));
-  float rayCast2 = Level::_currentLevel->rayCast(cocos2d::Vec2(getPositionX() + _bounds.width * 0.45f, getPositionY()));
+  float rayCast = Level::_currentLevel->rayCast(
+      cocos2d::Vec2(getPositionX() - _bounds.width * 0.45f, getPositionY()));
+  float rayCast2 = Level::_currentLevel->rayCast(
+      cocos2d::Vec2(getPositionX() + _bounds.width * 0.45f, getPositionY()));
   if (_velocity.y <= 0 && (rayCast < 12.0 || rayCast2 < 12.0f) && !jumping) {
     setPositionY(getPositionY() - std::min(rayCast, rayCast2));
     _onGround = true;
@@ -228,7 +235,7 @@ void Character::update(float dt) {
     _velocity.x = _speed;
   }
   _speed = cocos2d::clampf(_speed, 0.0f, 250.0f);
-  
+
   // Ground Friction
   if (!Util::getControllerState(0).left && !Util::getControllerState(0).right &&
       _onGround) {
@@ -282,5 +289,4 @@ void Character::update(float dt) {
 
   // Finalize update
   _previousControllerState = Util::getControllerState(0);
-  
 }
