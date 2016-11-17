@@ -124,8 +124,12 @@ void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender,
 void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender,
                        IOHIDDeviceRef device) {
   NSLog(@"Gamepad was unplugged");
-  auto iter = controllerStates.find(device);
-  controllerStates.erase(iter);
+  for(auto iterator = playerStates.begin(); iterator != playerStates.end(); iterator++) {
+    if(iterator->second.controller == inSender) {
+      iterator->second.controller = nullptr;
+      break;
+    }
+  }
 }
 
 void gamepadAction(void *inContext, IOReturn inResult, void *inSender,
