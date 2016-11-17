@@ -11,7 +11,7 @@
  </tileset>
  <layer name="Tiles" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzVk1EKwCAMQ/vjQYZu9z/ifhQ2aUrEus5CflR8TUlFYioHKjkpD3rdiXtUfcnVmOnx10q/aM4a95L3LBCX7QVlVGNqXM+MIybjt+ms90XxyHB7Lyx31i+qv3JH+0Jz3cUvyllTAe9muF67xHA9dpgp9n+rl/4MMVZwrQxb3AjdvcgbxA==
+   eJxjYBgYoDyAmJHKmFi/jto7POxFF6eHvdjEaW0vLnFa2IvLr/S0FxfAZS8l7kH3L8wsYuzFh0lxK6n+pXVY06q8JtZeaoYtsjh6vJJqL7X9TM/yihh71ZDkVKgojm7vQGAApawTAA==
   </data>
  </layer>
  <objectgroup name="Objects"/>

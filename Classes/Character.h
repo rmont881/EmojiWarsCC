@@ -37,6 +37,8 @@ private:
     // Physics
     cocos2d::Vec2 _velocity;
     cocos2d::Vec2 _oldPosition;
+    cocos2d::Vec2 _surfaceNormal = cocos2d::Vec2::UNIT_Y;
+    float _speed = 0.0f;
     
     bool _onGround = false;
     float _jumpForces = 0.0f;

@@ -15,10 +15,12 @@ namespace cocos2d { class TMXTiledMap; }
 
 class Level : public cocos2d::Node {
 public:
+    static Level* _currentLevel;
     CREATE_FUNC(Level);
     virtual bool init() override;
     virtual void load(const std::string& file);
     virtual const std::vector<Collider*>& getColliders() const { return _colliders; }
+    virtual float rayCast(const cocos2d::Vec2& start) const;
 private:
     bool isCollidableTile(uint32_t gid) const;
     float getFloatPropertyForTile(const uint32_t gid, const std::string& propName) const;

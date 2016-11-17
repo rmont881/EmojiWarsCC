@@ -1,6 +1,7 @@
 #include "LevelScene.h"
 #include "SimpleAudioEngine.h"
 #include "2d/CCTMXTiledMap.h"
+#include "2d/CCFontAtlasCache.h"
 #include "ui/UILayout.h"
 
 #include "Animations.h"
@@ -11,6 +12,7 @@
 #include "Collision.h"
 #include "Constants.h"
 #include "Pickup.h"
+#include "audio/include/SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -32,7 +34,13 @@ bool LevelScene::init() {
     
     initSpriteSheets();
     initAnimations();
-    
+  
+  // 59, 34, 117
+  // 227, 247, 255
+  
+  _drawBackground();
+  
+//    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("music.mp3");
     
     // Create the map
     _map = Level::create();
@@ -55,8 +63,56 @@ bool LevelScene::init() {
     _pauseLabel->setVisible(false);
     _pauseLabel->setOpacity(200);
     addChild(_pauseLabel);
-    
+  
+    _drawStatusBar();
+  
     return true;
+}
+
+void LevelScene::_drawBackground() {
+  auto layout = cocos2d::ui::Layout::create();
+  layout->setContentSize(this->getContentSize());
+  layout->setBackGroundColor(cocos2d::Color3B(165, 229, 255), cocos2d::Color3B(227, 247, 255));
+  layout->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::GRADIENT);
+  addChild(layout);
+  
+  auto bgLabel = cocos2d::Label::create();
+  bgLabel->setSystemFontSize(48);
+  bgLabel->setString("🏢🏬 🏣🏤🏨🏦🏢");
+  bgLabel->setColor(cocos2d::Color3B::WHITE);
+  bgLabel->setScale(2.0f);
+  bgLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE_BOTTOM);
+  bgLabel->setPosition(cocos2d::Point(RESOLUTION_WIDTH * 0.5, -20.0f));
+  bgLabel->setOpacity(100);
+  addChild(bgLabel);
+  
+  auto label = cocos2d::Label::create();
+  label->setSystemFontSize(48);
+  label->setString("");
+  label->setScale(2.0f);
+  label->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
+  label->setPosition(SCREEN_CENTER);
+  label->setOpacity(255);
+  addChild(label);
+}
+
+void LevelScene::_drawStatusBar() {
+  for (int i = 0; i < 4; ++i) {
+    auto _label1 = cocos2d::Label::create("Player " + std::to_string(i + 1), "fonts/ARCADECLASSIC.TTF", 36);
+    _label1->enableOutline(cocos2d::Color4B::WHITE, 2);
+    _label1->setTextColor(cocos2d::Color4B::BLACK);
+    _label1->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE);
+    _label1->setPosition(SCREEN_TOP_LEFT + cocos2d::Vec2(i * RESOLUTION_WIDTH / 4.0, 0.0));
+    _label1->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    
+    auto label2 = cocos2d::Label::create();
+    label2->setSystemFontSize(24);
+    label2->setString("❤️❤️❤️");
+    label2->setPosition(_label1->getPosition() + cocos2d::Vec2(150, 0));
+    label2->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    addChild(label2);
+    addChild(_label1);
+  }
 }
 
 void LevelScene::initSpriteSheets() {
