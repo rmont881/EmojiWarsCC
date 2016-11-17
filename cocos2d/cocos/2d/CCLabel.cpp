@@ -1252,6 +1252,7 @@ void Label::createSpriteForSystemFont(const FontDefinition& fontDef)
 
     auto texture = new (std::nothrow) Texture2D;
     texture->initWithString(_utf8Text.c_str(), fontDef);
+//  texture->setAliasTexParameters();
 
     _textSprite = Sprite::createWithTexture(texture);
     //set camera mask using label's camera mask, because _textSprite may be null when setting camera mask to label
