@@ -26,6 +26,7 @@ ControllerState &getControllerState(int index);
 #else
 const ControllerState &getControllerState(size_t index);
 #endif
+void setListenForInput(bool listen);
 }
 
 enum Buttons {
