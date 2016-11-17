@@ -28,12 +28,14 @@ bool Character::init() {
   listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                   cocos2d::Event *event) {
     ControllerState &keyboard_state = Util::getControllerState(_player_id);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.left = true;
       keyboard_state.right = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.right = true;
       keyboard_state.left = false;
@@ -67,10 +69,12 @@ bool Character::init() {
                                    cocos2d::Event *event) {
 
     ControllerState &keyboard_state = Util::getControllerState(_player_id);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       keyboard_state.left = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       keyboard_state.right = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S) {
@@ -141,13 +145,15 @@ void Character::resolveCollision(
 
   // Collision with level
   if (collider->getTag() == 0) {
-    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) > 0.5f && _velocity.y < 0.0f) {
+    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) > 0.5f &&
+        _velocity.y < 0.0f) {
       _velocity.y = 0.0f;
       _onGround = true;
     }
-//    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f && _velocity.y < 0.0f) {
-//      _velocity.y = 0.0f;
-//    }
+    //    if (closest.getNormalized().dot(cocos2d::Vec2::UNIT_Y) < 0.0f &&
+    //    _velocity.y < 0.0f) {
+    //      _velocity.y = 0.0f;
+    //    }
     if (fabs(closest.getNormalized().dot(cocos2d::Vec2::UNIT_X)) > 0.9f) {
       _velocity.x = 0.0f;
     }
@@ -166,8 +172,6 @@ void Character::resolveCollision(
   }
 }
 
-
-
 void Character::update(float dt) {
   dt = FIXED_TIME_STEP;
 
@@ -175,16 +179,16 @@ void Character::update(float dt) {
 
   if (std::fabs(_velocity.x) > 20.0f && _onGround) {
     _sprite->setFlippedX(_velocity.x < 0.0);
-      Animations::runAnimation(_sprite, "guy_walk");
+    Animations::runAnimation(_sprite, "guy_walk");
   } else if (_onGround) {
-     Animations::runAnimation(_sprite, "guy_idle");
+    Animations::runAnimation(_sprite, "guy_idle");
   }
-    
-    if (_velocity.y < -700) {
-        Animations::runAnimation(_sprite, "guy_falling");
-    } else {
-        _sprite->stopActionByTag(3);
-    }
+
+  if (_velocity.y < -700) {
+    Animations::runAnimation(_sprite, "guy_falling");
+  } else {
+    _sprite->stopActionByTag(3);
+  }
 
   // Jumping
   if (Util::getControllerState(_player_id).a && _onGround) {
