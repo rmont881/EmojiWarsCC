@@ -29,17 +29,20 @@ bool Character::init() {
   listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                   cocos2d::Event *event) {
     ControllerState &keyboard_state = Util::getControllerState(_player_id);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.left = true;
       keyboard_state.right = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.right = true;
       keyboard_state.left = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
       keyboard_state.down = true;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
@@ -68,13 +71,16 @@ bool Character::init() {
                                    cocos2d::Event *event) {
 
     ControllerState &keyboard_state = Util::getControllerState(_player_id);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       keyboard_state.left = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       keyboard_state.right = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S ||
+        keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
       keyboard_state.down = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
@@ -164,7 +170,8 @@ void Character::resolveCollision(
   // Pickups
   else if (collider->getTag() == WEAPON_TAG &&
            !closest.equals(cocos2d::Vec2::ZERO)) {
-    if (Util::getControllerState(_player_id).down && Util::getControllerState(_player_id).x) {
+    if (Util::getControllerState(_player_id).down &&
+        Util::getControllerState(_player_id).x) {
       collider->setFlags(0);
       _heldItem = static_cast<PickupableInterface *>(collider->getParent());
     }
@@ -239,8 +246,8 @@ void Character::update(float dt) {
   _speed = cocos2d::clampf(_speed, 0.0f, 250.0f);
 
   // Ground Friction
-  if (!Util::getControllerState(_player_id).left && !Util::getControllerState(_player_id).right &&
-      _onGround) {
+  if (!Util::getControllerState(_player_id).left &&
+      !Util::getControllerState(_player_id).right && _onGround) {
     _speed *= 0.5f;
     _velocity.x *= 0.5f;
   }
@@ -252,10 +259,12 @@ void Character::update(float dt) {
     cocos2d::Vec2 points[20];
     float t = 0.1f;
     for (int i = 0; i < 20; ++i) {
-      points[i].x = 0.0f + Util::getControllerState(_player_id).right_stick.x * t * 0.02;
-      points[i].y = 32.0f +
-                    Util::getControllerState(_player_id).right_stick.y * t * -0.03 +
-                    -1000 * t * t;
+      points[i].x =
+          0.0f + Util::getControllerState(_player_id).right_stick.x * t * 0.02;
+      points[i].y =
+          32.0f +
+          Util::getControllerState(_player_id).right_stick.y * t * -0.03 +
+          -1000 * t * t;
       t += 0.1f;
     }
     int i = 0;
