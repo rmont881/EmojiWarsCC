@@ -66,7 +66,6 @@ public:
     TriangleCollider(const cocos2d::Vec2& pos, const cocos2d::Size& size, TriangleOrientation orientation) : Collider(cocos2d::Rect(pos, size), nullptr), _orientation(orientation) { }
     TriangleCollider(const cocos2d::Rect& bounds, TriangleOrientation orientation) : Collider(bounds, nullptr), _orientation(orientation) { }
     const cocos2d::Rect& getBounds() override { return _bounds; }
-    virtual void setFlags(std::bitset<32> flags) override;
     virtual void collide(CollideableInterface* character) override;
 private:
     TriangleOrientation _orientation;

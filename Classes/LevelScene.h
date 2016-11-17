@@ -21,7 +21,9 @@ private:
     void initSpriteSheets();
     void initAnimations();
     void collisionDetection();
-    
+    void _drawStatusBar();
+    void _drawBackground();
+  
     bool _paused = false;
     
     // Items & Characters

@@ -16,8 +16,11 @@ bool Level::init() {
     _debugDraw = cocos2d::DrawNode::create();
     addChild(_debugDraw);
 #endif
+    _currentLevel = this;
     return true;
 }
+
+Level* Level::_currentLevel = nullptr;
 
 namespace {
     Collider* getColliderForTile(uint32_t gid, int row, int column) {
@@ -29,6 +32,8 @@ namespace {
             return new TriangleCollider(cocos2d::Rect(column * 32, (19 - row) * 32, 32, 32), TriangleOrientation::THIRD_QUADRANT);
         else if (gid == 38)
             return new TriangleCollider(cocos2d::Rect(column * 32, (19 - row) * 32, 32, 32), TriangleOrientation::SECOND_QUADRANT);
+        else if (gid == 39)
+            return new TriangleCollider(cocos2d::Rect(column * 32, (19 - row) * 32, 32, 32), TriangleOrientation::FOURTH_QUADRANT);
     }
     bool isCollidableTile(uint32_t gid);
 }
@@ -45,6 +50,31 @@ void Level::load(const std::string &file) {
     createCollidersFromObjectLayer();
 }
 
+float Level::rayCast(const cocos2d::Point& start) const {
+//  auto layer = _map->getLayer("Tiles");
+//  for (int row = 0; row < _height; ++row) {
+//    for (int column = 0; column < _width; ++column) {
+  auto layer = _map->getLayer("Tiles");
+  int column = start.x / 32;
+  int row = 19 - start.y / 32;
+  while (row < 20) {
+    uint32_t gid = layer->getTileGIDAt(cocos2d::Vec2(column, row));
+    if (gid == 35 || gid == 37 || gid == 39) {
+      return start.y - (20 - row) * 32.0f;
+    }
+    // down-slope left
+    if (gid == 36) {
+      return start.y - (20 - row) * 32.0f + fmod(start.x, 32.0f);
+    }
+    // down-slope right
+    if (gid == 38) {
+      return start.y - (20 - row) * 32.0f + (32.0 - fmod(start.x, 32.0f));
+    }
+    row++;
+  }
+//    }
+}
+
 void Level::createCollidersForTiles() {
     auto layer = _map->getLayer("Tiles");
     for (int row = 0; row < _height; ++row) {
@@ -56,10 +86,23 @@ void Level::createCollidersForTiles() {
             Collider* collider = getColliderForTile(gid, row, column);
             
             int flags = 0x0;
+            // top
             if (row - 1 > 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column, row - 1)))) { flags |= TOP; }
-            if (column + 1 < _width - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column + 1, row)))) { flags |= RIGHT; }
+            // bottom
             if (row + 1 < _height - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column, row + 1)))) { flags |= BOTTOM; }
-            if (column - 1 > 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column - 1, row)))) { flags |= LEFT; }
+            // left
+            if (gid == 35) {
+                if (column - 1 > 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column - 1, row)))) { flags |= LEFT; }
+            } else if (gid == 38) {
+                if (column - 1 > 1 && row + 1 < _height - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column - 1, row + 1)))) { flags |= LEFT; }
+            }
+            // right
+            if (gid == 35) {
+                if (column + 1 < _width - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column + 1, row)))) { flags |= RIGHT; }
+            } else if (gid == 36) {
+                if (column + 1 < _width && row + 1 < _height - 1 && !isCollidableTile(layer->getTileGIDAt(cocos2d::Vec2(column + 1, row + 1)))) { flags |= RIGHT; }
+            }
+            
             collider->setFlags(flags);
             
             _colliders.push_back(collider);
@@ -68,7 +111,7 @@ void Level::createCollidersForTiles() {
 }
 
 bool Level::isCollidableTile(uint32_t gid) const {
-    return gid == 35 || gid == 36 || gid == 37 || gid == 38;
+    return gid == 35 || gid == 36 || gid == 37 || gid == 38 || gid == 39;
 }
 
 float Level::getFloatPropertyForTile(const uint32_t gid, const std::string& propName) const {

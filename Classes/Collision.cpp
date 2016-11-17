@@ -73,17 +73,6 @@ void TriangleCollider::collide(CollideableInterface* collideable) {
     auto proj = SATAABB(x1, y1, hw1, hh1, x2, y2, bounds.width * 0.5f, bounds.height * 0.5f, this->getFlags());
     if (proj.empty()) return;
     
-    // TODO: This stops hickups on contiguous ramps
-//    proj.clear();
-    auto it = proj.begin();
-    for (; it != proj.end(); ++it) {
-        if (it->x < 0) {
-            proj.erase(it);
-            break;
-        }
-    }
-    
-    
     auto w = this->_bounds.size.width;
     auto h = this->_bounds.size.height;
     
@@ -120,13 +109,16 @@ void TriangleCollider::collide(CollideableInterface* collideable) {
             collideable->resolveCollision(this, proj);
         }
     }
-    
-}
-
-void TriangleCollider::setFlags(std::bitset<32> flags) {
-    if (_orientation == TriangleOrientation::SECOND_QUADRANT) {
-//        flags.reset(0); // TOP
-//        flags.reset(2); // LEFT
+    if (_orientation == TriangleOrientation::FOURTH_QUADRANT) {
+        cocos2d::Vec2 perp(h, -w);
+        perp.normalize();
+        float x = (collideable->getPosition().x - collideable->getBounds().width * 0.5f) - (this->_bounds.origin.x);
+        float y = (collideable->getPosition().y + collideable->getBounds().height) - (this->_bounds.origin.y);
+        auto projection = cocos2d::Vec2(x, y).project(perp);
+        if (projection.x < 0.0f) {
+            proj.push_back(-projection);
+            collideable->resolveCollision(this, proj);
+        }
     }
-    _flags = flags;
+    
 }

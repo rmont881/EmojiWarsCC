@@ -31,7 +31,9 @@ bool Weapon::init() {
     _collider->setTag(WEAPON_TAG);
     
     _bounds = cocos2d::Size(10.0f, 10.0f);
-    
+  
+    scheduleUpdate();
+  
     return true;
 }
 
@@ -51,7 +53,7 @@ void Weapon::resolveCollision(Collider* collider, const std::vector<cocos2d::Vec
 
 void Weapon::update(float dt) {
     if (_collider->getFlags() == 0) return;
-    
+  
     dt = FIXED_TIME_STEP;
     _oldPosition = _position;
     
