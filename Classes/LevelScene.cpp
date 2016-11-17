@@ -154,6 +154,10 @@ void LevelScene::update(float dt) {
     for (auto character : _characters) {
       character->update(dt);
     }
+    // Update all pickups
+    for (auto pickup : _pickups) {
+      pickup->update(dt);
+    }
   }
 
   for (int character_num = 0; character_num < NUM_PLAYERS; ++character_num) {
