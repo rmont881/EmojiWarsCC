@@ -130,20 +130,6 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender,
 
 void gamepadAction(void *inContext, IOReturn inResult, void *inSender,
                    IOHIDValueRef value) {
-  
-  if(listenForInput) {
-    bool alreadySet = false;
-    for(int i = 0;i<4;i++) {
-      if(playerStates[i].controller == inSender) {
-        alreadySet = true;
-        break;
-      }
-      if(!alreadySet && playerStates[i].controller == nullptr) {
-        playerStates[i].controller = inSender;
-        break;
-      }
-    }
-  }
     
   IOHIDElementRef element = IOHIDValueGetElement(value);
   uint32_t usagePage = IOHIDElementGetUsagePage(element);
@@ -155,6 +141,22 @@ void gamepadAction(void *inContext, IOReturn inResult, void *inSender,
     if(iterator->second.controller == inSender) {
       controller = &iterator->second;
       break;
+    }
+  }
+  
+  if(listenForInput) {
+    if (usagePage == kHIDPage_Button && usage == A) {
+      bool alreadySet = false;
+      for(int i = 0;i<4;i++) {
+        if(playerStates[i].controller == inSender) {
+          alreadySet = true;
+          break;
+        }
+        if(!alreadySet && playerStates[i].controller == nullptr) {
+          playerStates[i].controller = inSender;
+          break;
+        }
+      }
     }
   }
 
