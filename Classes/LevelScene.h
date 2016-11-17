@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "GamePad.h"
 
+#define NUM_PLAYERS 2
 class Level;
 class Character;
 class PickupableInterface;
@@ -24,12 +25,12 @@ private:
     bool _paused = false;
     
     // Items & Characters
-    Character* _character;
+    Character* _characters[NUM_PLAYERS];
     std::vector<PickupableInterface*> _pickups;
     
     // Map
     Level* _map;
     
     cocos2d::Label* _pauseLabel;
-    ControllerState _previousControllerState;
+    ControllerState _previousControllerState[NUM_PLAYERS];
 };
