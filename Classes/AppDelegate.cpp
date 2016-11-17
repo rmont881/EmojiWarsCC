@@ -37,7 +37,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
   register_all_packages();
 
-  auto scene = LevelScene::createScene();
+  auto scene = MenuScene::createScene();
   director->runWithScene(scene);
 
   setupGamepad();

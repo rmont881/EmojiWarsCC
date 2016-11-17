@@ -16,14 +16,17 @@ struct ControllerState {
       right_stick_press, up, down, left, right, start, back;
   cocos2d::Vec2 left_stick, right_stick;
   unsigned short left_trigger, right_trigger;
+  int player;
+  void * controller;
 };
 
 namespace Util {
 #if KEYBOARD_ONLY
-ControllerState &getControllerState(size_t index);
+ControllerState &getControllerState(int index);
 #else
 const ControllerState &getControllerState(size_t index);
 #endif
+void setListenForInput(bool listen);
 }
 
 enum Buttons {
