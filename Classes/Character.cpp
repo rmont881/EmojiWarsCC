@@ -16,28 +16,30 @@
 
 const cocos2d::Vec2 GRAVITY(0.0f, GRAVITY_Y);
 
+int Character::_number_of_players = 0;
 bool Character::init() {
   if (!Node::init())
     return false;
 
+  _player_id = _number_of_players++;
 #if KEYBOARD_ONLY
   extern std::map<void *, ControllerState> controllerStates;
   controllerStates.insert({0, ControllerState()});
   auto listener = cocos2d::EventListenerKeyboard::create();
   listener->onKeyPressed = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                   cocos2d::Event *event) {
-    ControllerState &keyboard_state = Util::getControllerState(0);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A) {
+    ControllerState &keyboard_state = Util::getControllerState(_player_id);
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.left = true;
       keyboard_state.right = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       _velocity.x = 0.0f;
       keyboard_state.right = true;
       keyboard_state.left = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
       keyboard_state.down = true;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
@@ -65,14 +67,14 @@ bool Character::init() {
   listener->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode,
                                    cocos2d::Event *event) {
 
-    ControllerState &keyboard_state = Util::getControllerState(0);
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A) {
+    ControllerState &keyboard_state = Util::getControllerState(_player_id);
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_A || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
       keyboard_state.left = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_D || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
       keyboard_state.right = false;
     }
-    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_S || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
       keyboard_state.down = false;
     }
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
@@ -162,7 +164,7 @@ void Character::resolveCollision(
   // Pickups
   else if (collider->getTag() == WEAPON_TAG &&
            !closest.equals(cocos2d::Vec2::ZERO)) {
-    if (Util::getControllerState(0).down && Util::getControllerState(0).x) {
+    if (Util::getControllerState(_player_id).down && Util::getControllerState(_player_id).x) {
       collider->setFlags(0);
       _heldItem = static_cast<PickupableInterface *>(collider->getParent());
     }
@@ -190,7 +192,7 @@ void Character::update(float dt) {
 
   // Jumping
   bool jumping = false;
-  if (!_previousControllerState.a && Util::getControllerState(0).a &&
+  if (!_previousControllerState.a && Util::getControllerState(_player_id).a &&
       _onGround) {
     CCLOG("Jumping");
     _velocity.y = 0.0f;
@@ -198,7 +200,7 @@ void Character::update(float dt) {
     Animations::runAnimation(_sprite, "guy_jumping");
     jumping = true;
   }
-  if (Util::getControllerState(0).a)
+  if (Util::getControllerState(_player_id).a)
     _jumpForces *= 0.9f;
   else
     _jumpForces *= 0.5f;
@@ -222,13 +224,13 @@ void Character::update(float dt) {
   _velocity += (forces / 1.0f) * dt;
 
   // Left / Right Movement
-  if (Util::getControllerState(0).left) {
+  if (Util::getControllerState(_player_id).left) {
     if (!_previousControllerState.left)
       _speed = 0.0f;
     _speed += 15.0f;
     _velocity.x = -_speed;
   }
-  if (Util::getControllerState(0).right) {
+  if (Util::getControllerState(_player_id).right) {
     if (!_previousControllerState.right)
       _speed = 0.0f;
     _speed += 15.0f;
@@ -237,22 +239,22 @@ void Character::update(float dt) {
   _speed = cocos2d::clampf(_speed, 0.0f, 250.0f);
 
   // Ground Friction
-  if (!Util::getControllerState(0).left && !Util::getControllerState(0).right &&
+  if (!Util::getControllerState(_player_id).left && !Util::getControllerState(_player_id).right &&
       _onGround) {
     _speed *= 0.5f;
     _velocity.x *= 0.5f;
   }
 
   // Draw parabolic arc for aiming thrown items
-  if (Util::getControllerState(0).right_stick.length() > 8000 &&
+  if (Util::getControllerState(_player_id).right_stick.length() > 8000 &&
       _heldItem != nullptr && Util::isThrowableItem(_heldItem)) {
 
     cocos2d::Vec2 points[20];
     float t = 0.1f;
     for (int i = 0; i < 20; ++i) {
-      points[i].x = 0.0f + Util::getControllerState(0).right_stick.x * t * 0.02;
+      points[i].x = 0.0f + Util::getControllerState(_player_id).right_stick.x * t * 0.02;
       points[i].y = 32.0f +
-                    Util::getControllerState(0).right_stick.y * t * -0.03 +
+                    Util::getControllerState(_player_id).right_stick.y * t * -0.03 +
                     -1000 * t * t;
       t += 0.1f;
     }
@@ -277,16 +279,16 @@ void Character::update(float dt) {
   }
 
   // Throw item
-  if (Util::getControllerState(0).right_stick.length() > 8000 &&
-      Util::getControllerState(0).x && !_previousControllerState.x &&
+  if (Util::getControllerState(_player_id).right_stick.length() > 8000 &&
+      Util::getControllerState(_player_id).x && !_previousControllerState.x &&
       _heldItem != nullptr) {
-    float x = Util::getControllerState(0).right_stick.x * 0.02;
-    float y = Util::getControllerState(0).right_stick.y * 0.02;
+    float x = Util::getControllerState(_player_id).right_stick.x * 0.02;
+    float y = Util::getControllerState(_player_id).right_stick.y * 0.02;
     _heldItem->setVelocity(cocos2d::Vec2(x, y));
     _heldItem->getCollideable()->setFlags(COLLIDE_ALL_SIDES);
     _heldItem = nullptr;
   }
 
   // Finalize update
-  _previousControllerState = Util::getControllerState(0);
+  _previousControllerState = Util::getControllerState(_player_id);
 }
